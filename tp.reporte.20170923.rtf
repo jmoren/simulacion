@@ -1,0 +1,243 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0\fswiss\fcharset0 Courier New;}}
+{\colortbl ;\red128\green0\blue0;\red0\green0\blue128;\red0\green0\blue0;\red128\green0\blue128;}
+\viewkind4\uc1\pard\qc\cf1\lang3082\ul\b\f0\fs40 REPORTE SNAKE
+\par \cf2\ulnone\fs30 
+\par Informaci\'f3n general
+\par 
+\par \pard\b0\fs20       START_TIME         END_TIME     BLOCKS    FACILITIES    STORAGES
+\par \cf3                0            39600         55             8           2 
+\par \pard\qc\cf2\b\fs30 
+\par Bloques no ejecutables
+\par \pard\cf3\b0\fs20  OFICINA\tab STORAGE\tab 10000
+\par MOSTRADOR\tab STORAGE\tab 4
+\par TCLIENTE\tab TABLE\tab M1,240,30,30
+\par TCOLA1\tab QTABLE\tab OFICINA1,10,10,10
+\par TCOLA2\tab QTABLE\tab OFICINA2,10,10,10
+\par TCOLAMOST\tab QTABLE \tab MOSTRADOR,10,10,10
+\par \tab INITIAL \tab X1,4
+\par TIPOCLI\tab FUNCTION RN1,D4 \tab 
+\par .36,1/.62,2/.84,3/1,4
+\par TEMPCLI\tab FUNCTION P$TIPO,D4\tab 
+\par 1,60/2,75/3,90/4,120
+\par 
+\par \pard\qc\cf2\b\fs30 
+\par Bloques ejecutables
+\par 
+\par \pard\b0\fs20   LINE         LOC  BLOCK_TYPE                               ENTRY_COUNT  CURRENT_COUNT  RETRY
+\par \cf3     15           1  GENERATE        120,60                           334              0      0
+\par     16           2  TRANSFER        ,ASIGNAR                         334              0      0
+\par     17           3  GENERATE        150,90                           263              0      0
+\par     18           4  ADVANCE         180,90                           263              1      0
+\par     19     ASIGNAR  ASSIGN          TIPO,FN$TIPOCLI                  596              0      0
+\par     20           6  TEST        NE  P$TIPO,2,VOYOFIC                 596              0      0
+\par     21           7  TEST        NE  P$TIPO,3,VOYOFIC                 426              0      0
+\par     22           8  TRANSFER        ,IRMOST                          295              0      0
+\par     23     VOYOFIC  TEST        E   P$TIPO,2,IROFI2                  301              0      0
+\par     24          10  TRANSFER        ,IROFI1                          170              0      0
+\par     25      IRMOST  QUEUE           MOSTRADOR                        466              0      0
+\par     26          12  ENTER           MOSTRADOR                        466              0      0
+\par     27          13  DEPART          MOSTRADOR                        466              0      0
+\par     28          14  ADVANCE         FN$TEMPCLI,30                    466              3      0
+\par     29          15  LEAVE           MOSTRADOR                        463              0      0
+\par     30          16  TRANSFER        ,FIN                             463              0      0
+\par     31      IROFI1  QUEUE           OFICINA1                         170              0      0
+\par     32          18  SEIZE           OFICINA1                         170              0      0
+\par     33          19  DEPART          OFICINA1                         170              0      0
+\par     34          20  ADVANCE         FN$TEMPCLI,30                    170              0      0
+\par     35          21  RELEASE         OFICINA1                         170              0      0
+\par     36          22  TRANSFER        ,FINOFIC                         170              0      0
+\par     37      IROFI2  QUEUE           OFICINA2                         131              0      0
+\par     38          24  SEIZE           OFICINA2                         131              0      0
+\par     39          25  DEPART          OFICINA2                         131              0      0
+\par     40          26  ADVANCE         FN$TEMPCLI,30                    131              0      0
+\par     41          27  RELEASE         OFICINA2                         131              0      0
+\par     42          28  TRANSFER        ,FINOFIC                         131              0      0
+\par     43     FINOFIC  TRANSFER        .40,IRMOST                       301              0      0
+\par     44         FIN  TRANSFER        .05,CAJAS                        593              0      0
+\par     45          31  TRANSFER        ,SALIDA                           33              0      0
+\par     46       CAJAS  TRANSFER        .02,COMUN                        560              0      0
+\par     47          33  PRIORITY        1                                 11              0      0
+\par     48       COMUN  SELECT      NU  CAJA,1,X1,,,NOHAY                560              0      0
+\par     49          35  TRANSFER        ,PAGAR                           541              0      0
+\par     50       NOHAY  SELECT      MIN CAJA,1,X1,,Q                      19              0      0
+\par     51       PAGAR  QUEUE           P$CAJA                           560              0      0
+\par     52          38  SEIZE           P$CAJA                           560              0      0
+\par     53          39  DEPART          P$CAJA                           560              0      0
+\par     54          40  ADVANCE         180,90                           560              3      0
+\par     55          41  RELEASE         P$CAJA                           557              0      0
+\par     56          42  TRANSFER        ,SALIDA                          557              0      0
+\par     57      SALIDA  TRANSFER        .30,PRINCIPAL                    590              0      0
+\par     58          44  ADVANCE         180,90                           191              0      0
+\par     59          45  TABULATE        TCLIENTE                         191              0      0
+\par     60   PRINCIPAL  TERMINATE                                        590              0      0
+\par     62          47  GENERATE        10800,,,1                          1              0      0
+\par     63          48  SAVEVALUE       1,8                                1              0      0
+\par     64          49  ADVANCE         10800                              1              0      0
+\par     65          50  SAVEVALUE       1,5                                1              0      0
+\par     66          51  ADVANCE         10800                              1              0      0
+\par     67          52  SAVEVALUE       1,7                                1              0      0
+\par     68          53  TERMINATE                                          1              0      0
+\par     70          54  GENERATE        3600                              11              0      0
+\par     71          55  TERMINATE       1                                 11              0      0
+\par \pard\qc\cf2\b\fs30 
+\par Facilities
+\par 
+\par \pard\b0\fs20  FACILITY          ENTRIES    UTIL.  AVE_TIME  AVAILABLE   OWNER   PEND   INTER   RETRY   DELAY
+\par \cf3               1        167    0,793   188,138          1      11      0       0       0       0
+\par               2        151    0,685   179,616          1       0      0       0       0       0
+\par               3        127    0,565   176,307          1       0      0       0       0       0
+\par               4         90    0,408   179,444          1       1      0       0       0       0
+\par               5         23    0,112   192,913          1       3      0       0       0       0
+\par               6          2    0,010   191,500          1       0      0       0       0       0
+\par        OFICINA1        170    0,322    75,059          1       0      0       0       0       0
+\par        OFICINA2        131    0,305    92,130          1       0      0       0       0       0
+\par \pard\qc\cf2\b\fs30 
+\par Queues
+\par 
+\par \pard\b0\fs20  QUEUE             MAX      CONT.  ENTRIES ENTRIES(0)  AVE.CONT.   AVE.TIME    AVE.(-0)   RETRY
+\par \cf3               1      1         0       167      151       0,037       8,802      91,875       0
+\par               2      1         0       151      149       0,004       0,980      74,000       0
+\par               3      1         0       127      126       0,001       0,417      53,000       0
+\par               4      1         0        90       90       0,000       0,000       0,000       0
+\par               5      1         0        23       23       0,000       0,000       0,000       0
+\par               6      1         0         2        2       0,000       0,000       0,000       0
+\par       MOSTRADOR      1         0       466      466       0,000       0,000       0,000       0
+\par        OFICINA1      2         0       170      135       0,034       7,835      38,057       0
+\par        OFICINA2      1         0       131      109       0,030       9,130      54,364       0
+\par \pard\qc\cf2\b\fs30 
+\par Storages
+\par 
+\par \pard\b0\fs20  STORAGE           CAP.   REMAIN.   MIN.   MAX.  ENTRIES  AVL.   AVE.C.    UTIL.  RETRY   DELAY
+\par \cf3       MOSTRADOR       4        1       0      4      466     1    0,947    0,237      0       0
+\par         OFICINA   10000    10000       0      0        0     1    0,000    0,000      0       0
+\par \pard\qc\cf2\b\fs30 
+\par Tables
+\par 
+\par \pard\cf4\b0\fs20 TCLIENTE            TABLE            M1,240,30,30
+\par 
+\par \cf3                MEDIA                         :        560,785
+\par                DESVIACION ESTANDAR           :        145,090
+\par                CANTIDAD EN RETRY             :              0
+\par 
+\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
+\par \cf3          0  -       240            3       1,571          1,571        98,429
+\par        241  -       270            1       0,524          2,094        97,906
+\par        271  -       300            3       1,571          3,665        96,335
+\par        301  -       330            1       0,524          4,188        95,812
+\par        331  -       360            8       4,188          8,377        91,623
+\par        361  -       390            5       2,618         10,995        89,005
+\par        391  -       420            9       4,712         15,707        84,293
+\par        421  -       450           13       6,806         22,513        77,487
+\par        451  -       480           14       7,330         29,843        70,157
+\par        481  -       510           12       6,283         36,126        63,874
+\par        511  -       540           22      11,518         47,644        52,356
+\par        541  -       570           14       7,330         54,974        45,026
+\par        571  -       600           14       7,330         62,304        37,696
+\par        601  -       630           13       6,806         69,110        30,890
+\par        631  -       660           11       5,759         74,869        25,131
+\par        661  -       690           10       5,236         80,105        19,895
+\par        691  -       720            8       4,188         84,293        15,707
+\par        721  -       750            5       2,618         86,911        13,089
+\par        751  -       780           10       5,236         92,147         7,853
+\par        781  -       810            9       4,712         96,859         3,141
+\par        811  -       840            3       1,571         98,429         1,571
+\par        841  -       870            0       0,000         98,429         1,571
+\par        871  -       900            2       1,047         99,476         0,524
+\par        901  -       930            0       0,000         99,476         0,524
+\par        931  -       960            0       0,000         99,476         0,524
+\par        961  -       990            1       0,524        100,000         0,000
+\par             Las frecuencias restantes (4) son todas cero.
+\par 
+\par         CANTIDAD DE VALORES TABULADOS :           191
+\par         VALOR MAXIMO TABULADO         :       981,000
+\par 
+\par \pard\qc\cf2\b\fs30 
+\par QTables
+\par 
+\par \pard\cf4\b0\fs20 TCOLA1              TABLE            OFICINA1,10,10,10
+\par 
+\par \cf3                MEDIA                         :          7,835
+\par                DESVIACION ESTANDAR           :         19,507
+\par                CANTIDAD EN RETRY             :              0
+\par 
+\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
+\par \cf3          0  -        10          139      81,765         81,765        18,235
+\par         11  -        20            8       4,706         86,471        13,529
+\par         21  -        30            5       2,941         89,412        10,588
+\par         31  -        40            3       1,765         91,176         8,824
+\par         41  -        50            4       2,353         93,529         6,471
+\par         51  -        60            5       2,941         96,471         3,529
+\par         61  -        70            3       1,765         98,235         1,765
+\par         71  -        80            0       0,000         98,235         1,765
+\par         81  -        90            2       1,176         99,412         0,588
+\par         91  -  Infinito            1       0,588        100,000         0,000
+\par 
+\par         MEDIA OVERFLOW                :       121,000
+\par         DESVIACION ESTANDAR OVERFLOW  :         0,000
+\par 
+\par         CANTIDAD DE VALORES TABULADOS :           170
+\par         VALOR MAXIMO TABULADO         :       121,000
+\par 
+\par \cf4 TCOLA2              TABLE            OFICINA2,10,10,10
+\par 
+\par \cf3                MEDIA                         :          9,130
+\par                DESVIACION ESTANDAR           :         24,422
+\par                CANTIDAD EN RETRY             :              0
+\par 
+\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
+\par \cf3          0  -        10          110      83,969         83,969        16,031
+\par         11  -        20            3       2,290         86,260        13,740
+\par         21  -        30            3       2,290         88,550        11,450
+\par         31  -        40            3       2,290         90,840         9,160
+\par         41  -        50            1       0,763         91,603         8,397
+\par         51  -        60            2       1,527         93,130         6,870
+\par         61  -        70            2       1,527         94,656         5,344
+\par         71  -        80            2       1,527         96,183         3,817
+\par         81  -        90            0       0,000         96,183         3,817
+\par         91  -  Infinito            5       3,817        100,000         0,000
+\par 
+\par         MEDIA OVERFLOW                :       103,400
+\par         DESVIACION ESTANDAR OVERFLOW  :         3,507
+\par 
+\par         CANTIDAD DE VALORES TABULADOS :           131
+\par         VALOR MAXIMO TABULADO         :       109,000
+\par 
+\par \cf4 TCOLAMOST           TABLE            MOSTRADOR,10,10,10
+\par 
+\par \cf3                MEDIA                         :          0,000
+\par                DESVIACION ESTANDAR           :          0,000
+\par                CANTIDAD EN RETRY             :              0
+\par 
+\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
+\par \cf3          0  -        10          466     100,000        100,000         0,000
+\par             Las frecuencias restantes (9) son todas cero.
+\par 
+\par         CANTIDAD DE VALORES TABULADOS :           466
+\par         VALOR MAXIMO TABULADO         :         0,000
+\par 
+\par \pard\qc\cf2\b\fs30 
+\par Savevalues
+\par 
+\par \pard\b0\fs20  SAVEVALUE               VALUE      RETRY
+\par \cf3          1                   7          0
+\par 
+\par \pard\qc\cf2\b\fs30 
+\par Cadena de eventos futuros (FEC)
+\par 
+\par \pard\b0\fs20  FEC_XACT_NUMBER    PRI         BDT       CURRENT       NEXT        PARAMETER        VALUE
+\par \cf3               12      0       39605            14         15             TIPO            4
+\par                1      0       39614            40         41             TIPO            3
+\par                                                                          CAJA            4
+\par                3      1       39619            40         41             TIPO            2
+\par                                                                          CAJA            5
+\par                5      0       39636             0          3
+\par                7      0       39640            14         15             TIPO            1
+\par                6      0       39643            14         15             TIPO            3
+\par                4      0       39659             4          5
+\par               11      0       39710            40         41             TIPO            1
+\par                                                                          CAJA            1
+\par                9      0       39725             0          1
+\par               13      0       43200             0         54
+\par 
+\par }
+ 
